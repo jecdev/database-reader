@@ -5,16 +5,22 @@ import sys
 from PyQt5.QtWidgets import QMainWindow, QApplication, QTableWidgetItem
 from layout import Ui_MainWindow
 
+
 # Connection details
-hostname = 'Jan-PC'
-port = 3306  # Default MySQL port
-database = 'practice'
-username = input('UN: ')
-password = input('PW: ')
+class DBDetails:
+    def dbInitiator(self):
+        hostname = 'Jan-PC'
+        port = 3306  # Default MySQL port
+        database = 'practice'
+        username = input('UN: ')
+        password = input('PW: ')
+        return hostname, port, database, username, password
 
 
 class SQLConnector:
     def __init__(self):
+        self.dbdetails = DBDetails()
+        hostname, port, database, username, password = self.dbdetails.dbInitiator()
         self.connection = sql.connect(
             host=hostname,
             port=port,
