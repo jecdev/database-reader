@@ -12,6 +12,7 @@ database = 'practice'
 username = input('UN: ')
 password = input('PW: ')
 
+
 class SQLConnector:
     def __init__(self):
         self.connection = sql.connect(
@@ -30,6 +31,7 @@ class SQLConnector:
         else:
             df = pd.read_sql(query, self.connection)
             return df, query
+
 
 class App(QMainWindow, Ui_MainWindow):
     def __init__(self):
@@ -55,7 +57,9 @@ class App(QMainWindow, Ui_MainWindow):
             output, executed_query = self.sql_connector.execute(query)
             self.statusbar.showMessage(f"Executed query: {executed_query}")
             if output is None:
-                self.statusbar.showMessage("Query executed but no result to display.")
+                self.statusbar.showMessage("Database updated. Showing results.. Click Commit to save changes.")
+                output = self.sql_connector.execute("SELECT * FROM details")[0]
+                self.display_results(output)
             else:
                 self.display_results(output)
         except Exception as e:
@@ -66,10 +70,11 @@ class App(QMainWindow, Ui_MainWindow):
         self.tableWidget.setRowCount(df.shape[0])
         self.tableWidget.setColumnCount(df.shape[1])
         self.tableWidget.setHorizontalHeaderLabels(df.columns)
-
+        print(df)
         for i in range(df.shape[0]):
             for j in range(df.shape[1]):
                 self.tableWidget.setItem(i, j, QTableWidgetItem(str(df.iloc[i, j])))
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
